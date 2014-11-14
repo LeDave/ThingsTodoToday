@@ -1,10 +1,14 @@
 <div class="container">
+    <!-- <div style="display:inline-block; min-height:50px;">
+        <input type="date" ng-model="t_date">
+    </div> -->
     <div style="display:inline-block; min-height:290px;">
-        <datepicker ng-model="dt" show-weeks="true" class="well well-sm" ng-click="selectDate()"></datepicker>
+        <datepicker ng-model="t_date" ng-click="isToday()" max-date="maxDate" show-weeks="true" class="well well-sm"></datepicker>
     </div>
+ 
     <!-- Todos input -->
     <form role="form" ng-submit="addTodo()">
-        <div class="row">
+        <div class="row" ng-show="todaySelected">
             <div class="input-group">
                 <input type="text" ng-model="todo" placeholder="What needs to be done?" class="form-control">
                 <span class="input-group-btn">
@@ -15,9 +19,12 @@
         <br/>
         <!-- Todos list -->
         <div ui-sortable ng-model="todos">
-            <p class="input-group" ng-repeat="todo in todos" style="padding:5px 10px; cursor: move;">
-                <input type="text" ng-model="todo" class="form-control">
-                <span class="input-group-btn">
+            <p class="input-group" ng-repeat="todo in todos | filter:matchDate(t_date)" style="padding:5px 10px; cursor: move;">
+                <span ng-class="{'todo-done': todo.done}">{{todo.name}}</span>
+                <span class="input-group-btn" ng-if="todaySelected">
+                    <button type="button" class="btn" ng-model="todo.done" btn-checkbox btn-checkbox-true="1" btn-checkbox-false="0">Done</button>
+                </span>
+                <span class="input-group-btn" ng-if="todaySelected">
                     <button class="btn btn-danger" ng-click="removeTodo($index)" aria-label="Remove">X</button>
                 </span> 
             </p>
